@@ -1,6 +1,4 @@
 # Start-Page
-My firefox start-page. I've removed sensitive URLs, however the general layout is the same.
+My firefox start-page.
 
-# Usage
-Check [/r/startpages](https://www.reddit.com/r/startpages/) to find out how to use it with your specific browser.
-
+![url](https://i.gyazo.com/b509eee62cfce053aa92a76ba603bda2.png)
