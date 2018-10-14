@@ -3,29 +3,29 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://SegFault42.com/posts/minishell/</loc>
+    <loc>http://segfault42.gitub.io/posts/minishell/</loc>
     <lastmod>2018-10-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://SegFault42.com/categories/</loc>
+    <loc>http://segfault42.gitub.io/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://SegFault42.com/posts/</loc>
-    <lastmod>2018-10-12T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://SegFault42.com/</loc>
+    <loc>http://segfault42.gitub.io/posts/</loc>
     <lastmod>2018-10-12T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://SegFault42.com/tags/</loc>
+    <loc>http://segfault42.gitub.io/</loc>
+    <lastmod>2018-10-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://segfault42.gitub.io/tags/</loc>
     <priority>0</priority>
   </url>
   
