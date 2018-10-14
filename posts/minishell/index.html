@@ -1,0 +1,531 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="SegFault42">
+
+<meta name="description" content="">
+
+<title>Ecriture d&#39;un shell</title>
+<meta name="generator" content="Hugo 0.49" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="http://SegFault42.com/css/theme.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    <h3 class="home-link"><a href="http://SegFault42.com">Root</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">SegFault42 - Most recent posts</h3>
+        <ul>
+            
+            <li><a href="http://SegFault42.com/posts/minishell/">Ecriture d&#39;un shell</a></li>
+            
+        </ul>
+    </div>
+
+    
+
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>Ecriture d&#39;un shell</h1>
+<h4>Published 10-12-2018 00:00:00</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="http://SegFault42.com/posts/minishell/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p>Un shell est la couche la plus haut niveau du systeme Unix.</p>
+
+<p>Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l&rsquo;execute.</p>
+
+<p>Nous allons diviser le travaille en plusieurs partie :</p>
+
+<ul>
+<li>Recuperer en boucle l&rsquo;entree de l&rsquo;utilisateur</li>
+<li>Parser l&rsquo;entree utilisateur</li>
+<li>Executer la commande</li>
+<li>Coder les builtin</li>
+<li>Gestion de l&rsquo;environement</li>
+</ul>
+
+<p>Tout au long de ce tutorial, la compilation ce fera comme suit :</p>
+
+<pre><code>clang -Weverything -fsanitize=address minishell.c -o minishell
+</code></pre>
+
+<h2 id="1-boucle-principale">1) Boucle principale</h2>
+
+<p>On commence par faire une boucle dans laquelle on lit STDIN (la commande de l&rsquo;user)</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+
+int	main()
+{
+	char	*buffer = NULL;
+	size_t	buf_size = 2048;
+
+	// alloc buffer qui stockera la commande entree par l'user
+	buffer = (char *)calloc(sizeof(char), buf_size);
+	if (buffer == NULL) {
+		perror(&quot;Malloc failure&quot;);
+		return (EXIT_FAILURE);
+	}
+
+	// ecriture d'un prompt
+	write(1, &quot;$&gt; &quot;, 3);
+
+	// lecture de STDIN en boucle
+	while (getline(&amp;buffer, &amp;buf_size, stdin) &gt; 0) {
+		printf(&quot;cmd = %s\n&quot;, buffer);
+		write(1, &quot;$&gt; &quot;, 3);
+	}
+
+	printf(&quot;Bye \n&quot;);
+	free(buffer);
+}
+</code></pre>
+
+<p>Nous avons un programme qui affiche un prompt et qui stock l&rsquo;entree de l&rsquo;utilisateur en boucle. On envoie EOF (Ctrl+D au shell pour quitter)</p>
+
+<p>Output :</p>
+
+<pre><code>$&gt; ls -la
+cmd = ls -la
+
+$&gt; cd ~/
+cmd = cd ~/
+
+$&gt; pwd
+cmd = pwd
+
+$&gt; Bye 
+</code></pre>
+
+<p>Il faut maintenant faire une fonction qui parse la commande.</p>
+
+<h2 id="2-parsing">2) Parsing</h2>
+
+<p>Prenons pour exemple la commande :</p>
+
+<pre><code>ls -la /
+</code></pre>
+
+<p>Nous avons le nom du binaire (ls) et ses arguments.</p>
+
+<p>la commande pourrais aussi etre :</p>
+
+<pre><code>$&gt;  ls       -la      /  
+</code></pre>
+
+<p>Nous allons ecrire une fonction qui va stocker notre commande (sans les espaces) dans un char **
+Ce qui donnera :</p>
+
+<pre><code>[ls][-la][/]
+</code></pre>
+
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+static char	**split(char *raw_cmd, char *limit)
+{
+	char	*ptr = NULL;
+	char	**cmd = NULL;
+	size_t	idx = 0;
+
+	// split sur les espaces
+	ptr = strtok(raw_cmd, limit);
+
+	while (ptr) {
+		cmd = (char **)realloc(cmd, ((idx + 1) * sizeof(char *)));
+		cmd[idx] = strdup(ptr);
+		ptr = strtok(NULL, limit);
+		++idx;
+	}
+	// On alloue un element qu'on met a NULL a la fin du tableau
+	cmd = (char **)realloc(cmd, ((idx + 1) * sizeof(char *)));
+	cmd[idx] = NULL;
+	return (cmd);
+}
+
+static void	free_array(char **array)
+{
+	for (int i = 0; array[i]; i++) {
+		free(array[i]);
+		array[i] = NULL;
+	}
+	free(array);
+	array = NULL;
+}
+</code></pre>
+
+<p>Comme on alloue dynamiquement notre <code>char **</code>, on fait une fonction (free_array) qui va liberer notre allocation.</p>
+
+<p>Nous sommes maintenant pret a executer notre commande avec <code>execve</code></p>
+
+<h2 id="3-execution">3) Execution</h2>
+
+<p>Pour executer notre commande nous allons utiliser le syscall <code>execve</code>.</p>
+
+<p>Nous devons utiliser le syscall <code>fork</code> pour cree un nouveau processus et lancer notre commande dans ce dernier.</p>
+
+<p>Ce qui donne ca :</p>
+
+<pre><code>static void	exec_cmd(char **cmd)
+{
+	pid_t	pid = 0;
+	int		status = 0;
+
+	// On fork
+	pid = fork();
+	if (pid == -1)
+		perror(&quot;fork&quot;);
+	// Si le fork a reussit, le processus pere attend l'enfant (process fork)
+	else if (pid &gt; 0) {
+		// On block le processus parent jusqu'a ce que l'enfant termine puis
+		// on kill le processus enfant
+		waitpid(pid, &amp;status, 0);
+		kill(pid, SIGTERM);
+	} else {
+		// Le processus enfant execute la commande ou exit si execve echoue
+		if (execve(cmd[0], cmd, NULL) == -1)
+			perror(&quot;shell&quot;);
+		exit(EXIT_FAILURE);
+	}
+}
+</code></pre>
+
+<p>Si on compile est on execute le code, voila ce qu&rsquo;il ce passe :</p>
+
+<pre><code>$&gt; ls
+shell: No such file or directory
+$&gt; /bin/ls
+README.md  main.c  mainn.c  minishell
+$&gt; Bye 
+</code></pre>
+
+<p>En envoyant une commande simple comme <code>ls</code> a notre shell, <code>execve</code> nous renvoie -1 et <code>perror</code> affiche <code>No such file or directory</code>.</p>
+
+<p>Le premier argument de <code>execve</code> doit etre le chemin absolue du binaire a executer.</p>
+
+<p>Pour lancer une commande sans donner le chemin absolue, nous devons chercher ou ce trouve le binaire <code>ls</code>, concatener le path + le nom du binaire et enfin le passer en premier argument a <code>execve</code></p>
+
+<p>Pour trouver ou ce trouve un programe, nous devons utiliser  la variable d&rsquo;environnement <code>PATH</code>. Si on execute la commande :</p>
+
+<pre><code>$&gt; echo $PATH
+</code></pre>
+
+<p>Nous allons avoir un output qui ressemble a celui la :</p>
+
+<pre><code>/bin:/usr/bin:/usr/local/bin
+</code></pre>
+
+<p>Il sagit des dossiers (separer par &lsquo;:&lsquo;) ou notre shell va chercher notre binaire a executer.</p>
+
+<p>Nous devons maintenant ecrire la fonction qui va concatener notre path et le binaire.</p>
+
+<p>Il faut recuperer le contenu de la variable $PATH avec la fonction <code>getenv</code>. Elle prend un seul parametre qui est la variable que l&rsquo;on cherche et renvoie un pointeur sur le contenue de la variable passer en parametre.</p>
+
+<p>Si notre binaire n&rsquo;est dans aucun dossier, on peut avertir l&rsquo;utilisateur par un <code>Command not found</code>, sinon on peut executer notre execve :D.</p>
+
+<p>La fonction qui recupere le recuperere la contenue de la variable $PATH et qui renvoie le chemin absolue :</p>
+
+<pre><code>static void	get_absolute_path(char **cmd)
+{
+	char	*path = strdup(getenv(&quot;PATH&quot;));
+	char	*bin = NULL;
+	char	**path_split = NULL;
+
+	if (path == NULL) // si le path est null, on cree un path
+		path = strdup(&quot;/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin&quot;);
+
+	// si cmd n'est pas le chemin absolue, on cherche le chemin absolue du
+	// binaire grace a la variable d'environement PATH
+	if (cmd[0][0] != '/' &amp;&amp; strncmp(cmd[0], &quot;./&quot;, 2) != 0) {
+
+		// On split le path pour verifier ou ce trouve le binaire
+		path_split = split(path, &quot;:&quot;);
+		free(path);
+		path = NULL;
+
+		// On boucle sur chaque dossier du path pour trouver l'emplacement du binaire
+		for (int i = 0; path_split[i]; i++) {
+			// alloc len du path + '/' + len du binaire + 1 pour le '\0'
+			bin = (char *)calloc(sizeof(char), (strlen(path_split[i]) + 1 + strlen(cmd[0]) + 1));
+			if (bin == NULL)
+				break ;
+
+			// On concat le path , le '/' et le nom du binaire
+			strcat(bin, path_split[i]);
+			strcat(bin, &quot;/&quot;);
+			strcat(bin, cmd[0]);
+
+			// On verfie l'existence du fichier et on quitte la boucle si access
+			// renvoi 0
+			if (access(bin, F_OK) == 0)
+				break ;
+
+			// Nous sommes des gens propre :D
+			free(bin);
+			bin = NULL;
+		}
+		free_array(path_split);
+
+		// On remplace le binaire par le path absolue ou NULL si le binaire
+		// n'existe pas
+		free(cmd[0]);
+		cmd[0] = bin;
+	} else {
+		free(path);
+		path = NULL;
+	}
+}
+</code></pre>
+
+<p>Notre main devient :</p>
+
+<pre><code>int	main()
+{
+	char	*buffer = NULL;
+	size_t	buf_size = 2048;
+
+	// alloc buffer qui stockera la commande entree par l'user
+	buffer = (char *)calloc(sizeof(char), buf_size);
+	if (buffer == NULL) {
+		perror(&quot;Malloc failure&quot;);
+		return (EXIT_FAILURE);
+	}
+
+	// ecriture d'un prompt
+	write(1, &quot;$&gt; &quot;, 3);
+
+	// lecture de STDIN en boucle
+	while (getline(&amp;buffer, &amp;buf_size, stdin) &gt; 0) {
+		cmd = split(buffer, &quot; \n\t&quot;);
+		get_absolute_path(cmd);
+
+		if (cmd[0] == NULL)
+			printf(&quot;Command not found\n&quot;);
+		else
+			exec_cmd(cmd);
+
+		write(1, &quot;$&gt; &quot;, 3);
+		free_array(cmd);
+
+	}
+
+	printf(&quot;Bye \n&quot;);
+	free(buffer);
+	}
+</code></pre>
+
+<p>A ce stade, notre shell execute une coommande mais n&rsquo;a pas de builtin, ni d&rsquo;environemnt.</p>
+
+<p>On va maintenant ajouter quelque builtin a notre shell.</p>
+
+<h2 id="4-built-in">4) Built-in</h2>
+
+<p>Une builtin est une commande coder dans notre shell. C&rsquo;est a dire une commande qui ne va pas s&rsquo;executer avec execve.</p>
+
+<p>Si on lance bash et que l&rsquo;on supprime la variable d&rsquo;environement <code>PATH</code>, notre shell doit quand meme pouvoir executer des commandes rudimentaire.</p>
+
+<p>les commandes <code>cd, pwd, export, echo, exit ...</code> doivent etre executable.</p>
+
+<p>Vous pouvez lister toutes les builtin sous bash avec la commande <code>help</code></p>
+
+<p>Nous allons voir les builtin <code>cd, pwd</code> . Il en existe beacoup d&rsquo;autre mais le but est juste que vous compreniez qu&rsquo;est ce qu&rsquo; une builtin et comment les implementer.</p>
+
+<p>Pour la builtin <code>cd</code>, nous allons utiliser la fonction <code>chdir</code></p>
+
+<p><code>chdir</code> prend en parametre le path qui va devenir le dossier courant.</p>
+
+<p>Une exemple d&rsquo;implementaion de la builtin <code>cd</code> :</p>
+
+<pre><code>void	built_in_cd(char *path)
+{
+	if (chdir(path) == -1) {
+		perror(&quot;chdir()&quot;);
+	}
+}
+</code></pre>
+
+<p>Un exemple de la builtin <code>pwd</code> :</p>
+
+<pre><code>void	built_in_pwd(void)
+{
+	char cwd[PATH_MAX];
+	
+	if (getcwd(cwd, sizeof(cwd)) != NULL) {
+	       printf(&quot;%s\n&quot;, cwd);
+	} else {
+		perror(&quot;getcwd()&quot;);
+	}
+}
+</code></pre>
+
+<p>Le code a jour avec la gestion des built-in :</p>
+
+<pre><code>// Les deux includes a ajouter pour le type bool et le define PATH_MAX
+#include &lt;stdbool.h&gt;
+#include &lt;linux/limits.h&gt;
+
+static bool	is_built_in(char *cmd)
+{
+	const char	*built_in[] = {&quot;pwd&quot;, &quot;cd&quot;, NULL};
+
+	for (int i = 0; built_in[i]; i++) {
+		if (!strcmp(built_in[i], cmd))
+			return (true);
+	}
+	return (false);
+}
+
+static void	exec_built_in(char **built_in)
+{
+	if (!strcmp(built_in[0], &quot;pwd&quot;))
+		built_in_pwd();
+	else if (!strcmp(built_in[0], &quot;cd&quot;))
+		built_in_cd(built_in[1]);
+}
+
+int	main()
+{
+	char	*buffer = NULL;
+	size_t	buf_size = 2048;
+	char	**cmd = NULL;
+
+	// alloc buffer qui stockera la commande entree par l'user
+	buffer = (char *)calloc(sizeof(char), buf_size);
+	if (buffer == NULL) {
+		perror(&quot;Malloc failure&quot;);
+		return (EXIT_FAILURE);
+	}
+
+	// ecriture d'un prompt
+	write(1, &quot;$&gt; &quot;, 3);
+
+	// lecture de STDIN en boucle
+	while (getline(&amp;buffer, &amp;buf_size, stdin) &gt; 0) {
+		cmd = split(buffer, &quot; \n\t&quot;);
+
+		if (cmd[0] == NULL)
+			printf(&quot;Command not found\n&quot;);
+		else if (is_built_in(cmd[0]) == false) {
+			get_absolute_path(cmd);
+			exec_cmd(cmd);
+		} else
+			exec_built_in(cmd);
+
+		write(1, &quot;$&gt; &quot;, 3);
+		free_array(cmd);
+
+	}
+
+	printf(&quot;Bye \n&quot;);
+	free(buffer);
+}
+
+</code></pre>
+
+<p>Nous avons maintenant un shell qui peut executer une commande avec execve et des builtin :D.</p>
+
+<p>Nous allons voir maintenant une chose importante dans un shell, l&rsquo;environement.</p>
+
+<h2 id="5-l-environement">5) l&rsquo;environement</h2>
+
+<p>Dans n&rsquo;importe quel shell unix, la commande <code>env</code> affiche les variables d&rsquo;environement.</p>
+
+<p>Une variable d&rsquo;environement sert a communiquer des informations entre plusieurs programme.</p>
+
+<p>En C, on peut recuperer l&rsquo;ensemble des variables d&rsquo;environement par le 3eme argument de la fonction main, char **envp.</p>
+
+<p>On peut soit cree un environement en dupliquant la variable envp, et/ou coder en dur un environement minimaliste.</p>
+
+<p>Nous allons coder une fonction qui stock les variables d&rsquo;environement dans une liste chainee.</p>
+
+<p>Si un utilisateur veut ajouter ou supprimer une variable, nous aurons juste a ajouter ou supprimer un maillon de notre liste :D.</p>
+
+<p>Voila la liste des variables qui seront ajouter si elle n&rsquo;existe pas dans envp :</p>
+
+<ul>
+<li>PATH : Pour avoir la liste des dossiers ou chercher les binaires a executer</li>
+<li>HOME : Pour connaitre ou est notre home :D</li>
+<li>OLDPWD : Pour connaitre le dossier dans lequel nous etions</li>
+<li>PWD : Pour connaitre le path actuelle</li>
+<li>SHLVL : Pour savoir combien de shell nous avons lancer</li>
+</ul>
+
+<p>On commence par ecrire notre fonction qui va dupliquer l&rsquo;env.</p>
+
+<pre><code>static void	dup_env(char **envp)
+{
+	char	*var_lst[] = {&quot;PATH&quot;, &quot;HOME&quot;, &quot;OLDPWD&quot;, &quot;SHLVL&quot;, NULL};
+	ssize_t	nb_elem = 4; // nombre d'element dasn var_lst
+
+	// boucle sur l'env et stock les variables dans la liste
+	for (int i = 0; envp[i]; i++) {
+		add_tail(envp[i]);
+
+		// On verifie que l'on a les variables d'environement minimal
+		if (!strncmp(envp[i], &quot;PATH&quot;, 4)) var_lst[0] = NULL;
+		else if (!strncmp(envp[i], &quot;HOME&quot;, 4)) var_lst[1] = NULL;
+		else if (!strncmp(envp[i], &quot;OLDPWD&quot;, 6)) var_lst[2] = NULL;
+		else if (!strncmp(envp[i], &quot;SHLVL&quot;, 5)) var_lst[3] = NULL;
+	}
+
+	// On verifie qu l'on a les varaibles PATH, HOME, OLD_PWD et SHLVL
+	for (int i = 0; i &lt; 4; i++) {
+		if (var_lst[i] != NULL)
+			add_env_var(var_lst[i]);
+	}
+}
+</code></pre>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="http://SegFault42.com/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+

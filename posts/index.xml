@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on SegFault42</title>
+    <link>http://SegFault42.com/posts/</link>
+    <description>Recent content in Posts on SegFault42</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 12 Oct 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://SegFault42.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ecriture d&#39;un shell</title>
+      <link>http://SegFault42.com/posts/minishell/</link>
+      <pubDate>Fri, 12 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://SegFault42.com/posts/minishell/</guid>
+      <description>Un shell est la couche la plus haut niveau du systeme Unix.
+Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l&amp;rsquo;execute.
+Nous allons diviser le travaille en plusieurs partie :
+ Recuperer en boucle l&amp;rsquo;entree de l&amp;rsquo;utilisateur Parser l&amp;rsquo;entree utilisateur Executer la commande Coder les builtin Gestion de l&amp;rsquo;environement  Tout au long de ce tutorial, la compilation ce fera comme suit :</description>
+    </item>
+    
+  </channel>
+</rss>
