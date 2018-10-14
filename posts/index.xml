@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on SegFault42</title>
-    <link>http://segfault42.github.io/posts/</link>
+    <link>https://segfault42.github.io/posts/</link>
     <description>Recent content in Posts on SegFault42</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 12 Oct 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://segfault42.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://segfault42.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Ecriture d&#39;un shell</title>
-      <link>http://segfault42.github.io/posts/minishell/</link>
+      <link>https://segfault42.github.io/posts/minishell/</link>
       <pubDate>Fri, 12 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://segfault42.github.io/posts/minishell/</guid>
+      <guid>https://segfault42.github.io/posts/minishell/</guid>
       <description>Un shell est la couche la plus haut niveau du systeme Unix.
 Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l&amp;rsquo;execute.
 Nous allons diviser le travaille en plusieurs partie :
