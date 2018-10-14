@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on SegFault42</title>
-    <link>http://segfault42.gitub.io/categories/</link>
+    <link>http://segfault42.github.io/categories/</link>
     <description>Recent content in Categories on SegFault42</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="http://segfault42.gitub.io/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://segfault42.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
