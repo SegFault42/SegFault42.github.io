@@ -23,5 +23,14 @@ Nous allons diviser le travaillons en plusieurs parties :
  Récupérer en boucle l’entrée de l’utilisateur Parser l’entrée utilisateur Executer la commande Coder les builtins Gestion de l’environnement  Tout au long de ce tutorial, la compilation se fera comme suit :</description>
     </item>
     
+    <item>
+      <title>Module de lecture de nand pour nintendo 3ds</title>
+      <link>https://segfault42.github.io/posts/3ds_hard_memory_dump/</link>
+      <pubDate>Wed, 10 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://segfault42.github.io/posts/3ds_hard_memory_dump/</guid>
+      <description> Module de lecture de nand pour nintendo 3ds Point a souder au dos de la carte mere : Le DAT1, DAT2 et DAT3 sont uniquement a souder pour une meilleur vitesse de transfert. CLK altrnatif : CMD en rouge et DAT0 en noir : Connecteur souder a la carte mere de la console : Module de lecture de nand : Face arriere de la console : Module brancher a la console : Module brancher a la console : Module connecter au pc : Error code : </description>
+    </item>
+    
   </channel>
 </rss>
