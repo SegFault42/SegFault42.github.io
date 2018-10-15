@@ -67,21 +67,21 @@
 <article>
     
 
-<p>Un shell est la couche la plus haut niveau du systeme Unix.</p>
+<p>Un shell est la couche le plus haut niveau du système Unix.</p>
 
-<p>Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l&rsquo;execute.</p>
+<p>Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l’exécute.</p>
 
-<p>Nous allons diviser le travaille en plusieurs partie :</p>
+<p>Nous allons diviser le travaillons en plusieurs parties :</p>
 
 <ul>
-<li>Recuperer en boucle l&rsquo;entree de l&rsquo;utilisateur</li>
-<li>Parser l&rsquo;entree utilisateur</li>
+<li>Récupérer en boucle l’entrée de l’utilisateur</li>
+<li>Parser l’entrée utilisateur</li>
 <li>Executer la commande</li>
-<li>Coder les builtin</li>
-<li>Gestion de l&rsquo;environement</li>
+<li>Coder les builtins</li>
+<li>Gestion de l’environnement</li>
 </ul>
 
-<p>Tout au long de ce tutorial, la compilation ce fera comme suit :</p>
+<p>Tout au long de ce tutorial, la compilation se fera comme suit :</p>
 
 <pre><code>clang -Weverything minishell.c -o minishell
 </code></pre>
@@ -120,7 +120,7 @@ int	main()
 }
 </code></pre>
 
-<p>Nous avons un programme qui affiche un prompt et qui stock l&rsquo;entree de l&rsquo;utilisateur en boucle. On envoie EOF (Ctrl+D au shell pour quitter)</p>
+<p>Nous avons un programme qui affiche un prompt et qui stocke l’entrée de l&rsquo;utilisateur en boucle. On envoie EOF (Ctrl+D au shell pour quitter)</p>
 
 <p>Output :</p>
 
@@ -147,12 +147,12 @@ $&gt; Bye
 
 <p>Nous avons le nom du binaire (ls) et ses arguments.</p>
 
-<p>la commande pourrais aussi etre :</p>
+<p>la commande pourrait aussi être :</p>
 
 <pre><code>$&gt;  ls       -la      /  
 </code></pre>
 
-<p>Nous allons ecrire une fonction qui va stocker notre commande (sans les espaces) dans un char **
+<p>Nous allons écrire une fonction qui va stocker notre commande (sans les espaces) dans un char **
 Ce qui donnera :</p>
 
 <pre><code>[ls][-la][/]
@@ -195,17 +195,17 @@ static void	free_array(char **array)
 }
 </code></pre>
 
-<p>Comme on alloue dynamiquement notre <code>char **</code>, on fait une fonction (free_array) qui va liberer notre allocation.</p>
+<p>Comme on alloue dynamiquement notre <code>char **</code>, on fait une fonction (free_array) qui va libérer notre allocation.</p>
 
-<p>Nous sommes maintenant pret a executer notre commande avec <code>execve</code></p>
+<p>Nous sommes maintenant prêt à exécuter notre commande avec <code>execve</code></p>
 
-<h2 id="3-execution">3) Execution</h2>
+<h2 id="3-exécution">3) Exécution</h2>
 
-<p>Pour executer notre commande nous allons utiliser le syscall <code>execve</code>.</p>
+<p>Pour exécuter notre commande nous allons utiliser le syscall <code>execve</code>.</p>
 
-<p>Nous devons utiliser le syscall <code>fork</code> pour cree un nouveau processus et lancer notre commande dans ce dernier.</p>
+<p>Nous devons utiliser le syscall <code>fork</code> pour crée un nouveau processus et lancer notre commande dans ce dernier.</p>
 
-<p>Ce qui donne ca :</p>
+<p>Ce qui donne ça :</p>
 
 <pre><code>static void	exec_cmd(char **cmd)
 {
@@ -231,7 +231,7 @@ static void	free_array(char **array)
 }
 </code></pre>
 
-<p>Si on compile est on execute le code, voila ce qu&rsquo;il ce passe :</p>
+<p>Si on compile et on exécute le code, voilà ce qu&rsquo;il se passe :</p>
 
 <pre><code>$&gt; ls
 shell: No such file or directory
@@ -240,31 +240,33 @@ README.md  main.c  mainn.c  minishell
 $&gt; Bye 
 </code></pre>
 
-<p>En envoyant une commande simple comme <code>ls</code> a notre shell, <code>execve</code> nous renvoie -1 et <code>perror</code> affiche <code>No such file or directory</code>.</p>
+<p>En envoyant une commande simple comme <code>ls</code> à notre shell, <code>execve</code> nous renvoie -1 et <code>perror</code> affiché <code>No such file or directory</code>.</p>
 
-<p>Le premier argument de <code>execve</code> doit etre le chemin absolue du binaire a executer.</p>
+<p>Le premier argument <code>d'execve</code> doit être le chemin absolu du binaire à exécuter.</p>
 
-<p>Pour lancer une commande sans donner le chemin absolue, nous devons chercher ou ce trouve le binaire <code>ls</code>, concatener le path + le nom du binaire et enfin le passer en premier argument a <code>execve</code></p>
+<p>Pour lancer une commande sans donner le chemin absolu, nous devons chercher ou se trouve le binaire <code>ls</code>, concaténer le path + le nom du binaire et enfin le passer en premier argument à <code>execve</code></p>
 
-<p>Pour trouver ou ce trouve un programe, nous devons utiliser  la variable d&rsquo;environnement <code>PATH</code>. Si on execute la commande :</p>
+<p>Pour trouver ou se trouve un programme, nous devons utiliser la variable d&rsquo;environnement <code>PATH</code>.</p>
+
+<p>Si on exécute la commande :</p>
 
 <pre><code>$&gt; echo $PATH
 </code></pre>
 
-<p>Nous allons avoir un output qui ressemble a celui la :</p>
+<p>Nous allons avoir un output qui ressemble à celui-là :</p>
 
 <pre><code>/bin:/usr/bin:/usr/local/bin
 </code></pre>
 
-<p>Il sagit des dossiers (separer par &lsquo;:&lsquo;) ou notre shell va chercher notre binaire a executer.</p>
+<p>Il s&rsquo;agit des dossiers (séparer par &lsquo;:&lsquo;) ou notre Shell va chercher notre binaire à exécuter.</p>
 
-<p>Nous devons maintenant ecrire la fonction qui va concatener notre path et le binaire.</p>
+<p>Nous devons maintenant écrire la fonction qui va concaténer notre path et le binaire.</p>
 
-<p>Il faut recuperer le contenu de la variable $PATH avec la fonction <code>getenv</code>. Elle prend un seul parametre qui est la variable que l&rsquo;on cherche et renvoie un pointeur sur le contenue de la variable passer en parametre.</p>
+<p>Il faut récupérer le contenu de la variable $PATH avec la fonction <code>getenv</code>. Elle prend un seul paramètre qui est la variable que l&rsquo;on cherche et renvoie un pointeur sur le contenu de la variable passer en paramètre.</p>
 
-<p>Si notre binaire n&rsquo;est dans aucun dossier, on peut avertir l&rsquo;utilisateur par un <code>Command not found</code>, sinon on peut executer notre execve :D.</p>
+<p>Si notre binaire n&rsquo;est dans aucun dossier, on peut avertir l&rsquo;utilisateur par un <code>Command not found</code>, sinon on peut exécuter notre execve : D.</p>
 
-<p>La fonction qui recupere le recuperere la contenue de la variable $PATH et qui renvoie le chemin absolue :</p>
+<p>La fonction qui récupère le contenue de la variable $PATH et qui renvoie le chemin absolu :</p>
 
 <pre><code>static void	get_absolute_path(char **cmd)
 {
@@ -276,7 +278,7 @@ $&gt; Bye
 		path = strdup(&quot;/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin&quot;);
 
 	// si cmd n'est pas le chemin absolue, on cherche le chemin absolue du
-	// binaire grace a la variable d'environement PATH
+	// binaire grace a la variable d'environment PATH
 	if (cmd[0][0] != '/' &amp;&amp; strncmp(cmd[0], &quot;./&quot;, 2) != 0) {
 
 		// On split le path pour verifier ou ce trouve le binaire
@@ -355,25 +357,25 @@ $&gt; Bye
 	}
 </code></pre>
 
-<p>A ce stade, notre shell execute une coommande mais n&rsquo;a pas de builtin, ni d&rsquo;environemnt.</p>
+<p>À ce stade, notre shell exécute une commande mais n&rsquo;a pas de builtin, ni d&rsquo;environemnt.</p>
 
-<p>On va maintenant ajouter quelque builtin a notre shell.</p>
+<p>On va maintenant ajouter quelques builtin à notre shell.</p>
 
 <h2 id="4-built-in">4) Built-in</h2>
 
-<p>Une builtin est une commande coder dans notre shell. C&rsquo;est a dire une commande qui ne va pas s&rsquo;executer avec execve.</p>
+<p>Une builtin est une commande coder dans notre shell. c&rsquo;est-à-dire une commande qui ne va pas s&rsquo;exécuter avec execve.</p>
 
-<p>Si on lance bash et que l&rsquo;on supprime la variable d&rsquo;environement <code>PATH</code>, notre shell doit quand meme pouvoir executer des commandes rudimentaire.</p>
+<p>Si on lance bash et que l&rsquo;on supprime la variable d&rsquo;environment <code>PATH</code>, notre shell doit quand même pouvoir exécuter des commandes rudimentaires.</p>
 
-<p>les commandes <code>cd, pwd, export, echo, exit ...</code> doivent etre executable.</p>
+<p>les commandes <code>cd, pwd, export, echo, exit ...</code> doivent être exécutable.</p>
 
 <p>Vous pouvez lister toutes les builtin sous bash avec la commande <code>help</code></p>
 
-<p>Nous allons voir les builtin <code>cd, pwd</code> . Il en existe beacoup d&rsquo;autre mais le but est juste que vous compreniez qu&rsquo;est ce qu&rsquo; une builtin et comment les implementer.</p>
+<p>Nous allons voir les builtin <code>cd, pwd</code> . Il en existe beaucoup d&rsquo;autres mais le but est juste que vous compreniez qu&rsquo;est-ce qu&rsquo;une builtin et comment les implémenter.</p>
 
 <p>Pour la builtin <code>cd</code>, nous allons utiliser la fonction <code>chdir</code></p>
 
-<p><code>chdir</code> prend en parametre le path qui va devenir le dossier courant.</p>
+<p><code>chdir</code>prend en paramètre le path qui va devenir le dossier courant</p>
 
 <p>Une exemple d&rsquo;implementaion de la builtin <code>cd</code> :</p>
 
@@ -399,9 +401,9 @@ $&gt; Bye
 }
 </code></pre>
 
-<p>Une fois que nous passerons au code de l&rsquo;environement, nous modifierons les built-in pour qu&rsquo;elle utilise l&rsquo;environement.</p>
+<p>Une fois que nous passerons au code de l&rsquo;environment, nous modifierons les built-in pour qu&rsquo;elle utilise l&rsquo;environment.</p>
 
-<p>Le code a jour avec la gestion des built-in :</p>
+<p>Le code à jour avec la gestion des built-in :</p>
 
 <pre><code>// Les deux includes a ajouter pour le type bool et le define PATH_MAX
 #include &lt;stdbool.h&gt;
@@ -465,36 +467,36 @@ int	main()
 
 </code></pre>
 
-<p>Nous avons maintenant un shell qui peut executer une commande avec execve et des builtin :D.</p>
+<p>Nous avons maintenant un shell qui peut exécuter une commande avec execve et des builtin :D.</p>
 
-<p>Nous allons voir maintenant une chose importante dans un shell, l&rsquo;environement.</p>
+<p>Nous allons voir maintenant une chose importante dans un shell, l&rsquo;environment.</p>
 
-<h2 id="5-l-environement">5) l&rsquo;environement</h2>
+<h2 id="5-l-environment">5) l&rsquo;environment</h2>
 
-<p>Dans n&rsquo;importe quel shell unix, la commande <code>env</code> affiche les variables d&rsquo;environement.</p>
+<p>Dans n&rsquo;importe quel shell Unix, la commande <code>env</code> affiche les variables d&rsquo;environment.</p>
 
-<p>Une variable d&rsquo;environement sert a communiquer des informations entre plusieurs programme.</p>
+<p>Une variable d&rsquo;environment sert à communiquer des informations entre plusieurs programmes.</p>
 
-<p>En C, on peut recuperer l&rsquo;ensemble des variables d&rsquo;environement par le 3eme argument de la fonction main, char **envp.</p>
+<p>En C, on peut récupérer l&rsquo;ensemble des variables d&rsquo;environment par le 3e argument de la fonction main, <code>char **envp</code>.</p>
 
-<p>On peut soit cree un environement en dupliquant la variable envp, et/ou coder en dur un environement minimaliste.</p>
+<p>On peut soit crée un environment en dupliquant la variable envp, et/ou codant en dur un environment minimaliste.</p>
 
-<p>Nous allons coder une fonction qui stock les variables d&rsquo;environement dans une liste chainee.</p>
+<p>Nous allons coder une fonction qui stocke les variables d&rsquo;environment dans une liste chainée.</p>
 
-<p>Si un utilisateur veut ajouter ou supprimer une variable, nous aurons juste a ajouter ou supprimer un maillon de notre liste :D.</p>
+<p>Si un utilisateur veut ajouter ou supprimer une variable, nous aurons juste à ajouter ou supprimer un maillon de notre liste : D.</p>
 
-<p>Voila la liste des variables qui seront ajouter si elle n&rsquo;existe pas dans envp :</p>
+<p>Voilà la liste des variables qui seront ajoutées si elle n&rsquo;existe pas dans envp :</p>
 
 <ul>
-<li>PATH : Pour avoir la liste des dossiers ou chercher les binaires a executer</li>
+<li>PATH : Pour avoir la liste des dossiers ou chercher les binaires a exécuter</li>
 <li>HOME : Pour connaitre ou est notre home :D</li>
 <li>OLDPWD : Pour connaitre le dossier dans lequel nous etions</li>
 <li>PWD : Pour connaitre le path actuelle</li>
 <li>SHLVL : Pour savoir combien de shell nous avons lancer</li>
 </ul>
 
-<p>On commence par ecrire notre fonction qui va dupliquer l&rsquo;env.
-On parcourt envp et on stock chaque variable dans une liste chainee.</p>
+<p>On commence par écrire notre fonction qui va dupliquer l&rsquo;env.
+On parcourt envp et on stock chaque variable dans une liste chainée.</p>
 
 <pre><code>static void	add_env_var(char *var)
 {
@@ -547,7 +549,7 @@ static void	dup_env(char **envp)
 	for (int i = 0; envp[i]; i++) {
 		add_tail(strdup(envp[i]));
 
-		// On verifie que l'on a les variables d'environement minimal
+		// On verifie que l'on a les variables d'environment minimal
 		if (!strncmp(envp[i], &quot;PATH&quot;, 4)) var_lst[0] = NULL;
 		else if (!strncmp(envp[i], &quot;HOME&quot;, 4)) var_lst[1] = NULL;
 		else if (!strncmp(envp[i], &quot;OLDPWD&quot;, 6)) var_lst[2] = NULL;
@@ -564,12 +566,11 @@ static void	dup_env(char **envp)
 }
 </code></pre>
 
-<p>Je ne met pas les fonctions pour manipuler ma liste chainee, le but de cette article est l&rsquo;ecriture d&rsquo;un shell.
-Elles sont dans le code source.</p>
+<p>Je ne mets pas les fonctions pour manipuler ma liste chainée, le but de cet article est l&rsquo;écriture d&rsquo;un shell. Elles sont dans le code source.</p>
 
-<p>J&rsquo;ai reecris la builtin pwd. Maitenant qu&rsquo;on a un env, on parcour la liste jusqu&rsquo;a trouver notre variable et on l&rsquo;affiche.</p>
+<p>J&rsquo;ai modifié la builtin pwd. Maintenant qu&rsquo;on a un env, ont parcour la liste jusqu&rsquo;à trouver notre variable et on l&rsquo;affiche.</p>
 
-<p>Au lancement du shell on initialise la variable PWD si elle n&rsquo;existe pas, et par la suite c&rsquo;est la buitin cd qui modifiera PWD et OLD_PWD.</p>
+<p>Au lancement de shell on initialise la variable PWD si elle n&rsquo;existe pas, et par la suite c&rsquo;est la buitin cd qui modifiera PWD et OLD_PWD.</p>
 
 <pre><code>static char	*built_in_pwd(void)
 {
@@ -592,7 +593,7 @@ Elles sont dans le code source.</p>
 }
 </code></pre>
 
-<p>J&rsquo;ai aussi ajouter une builtin env qui affiche tout l&rsquo;env :</p>
+<p>J&rsquo;ai aussi ajouté une builtin env qui affiche tout l&rsquo;env :</p>
 
 <pre><code>static void	built_in_env(void)
 {
@@ -606,7 +607,7 @@ Elles sont dans le code source.</p>
 </code></pre>
 
 <p>On peut aussi ajouter la builtin setenv pour ajouter une variable et unsetenv pour supprimer une variable.
-Je ne les ferais pas dans cette article, il suffit juste de supprimer un maillon ou d&rsquo;en ajouter un a notre liste.</p>
+Je ne les ferais pas dans cet article, il suffit juste de supprimer un maillon ou d&rsquo;en ajouter un à notre liste.</p>
 
 <pre><code>static void	built_in_cd(char *path)
 {
@@ -636,7 +637,9 @@ Je ne les ferais pas dans cette article, il suffit juste de supprimer un maillon
 }
 </code></pre>
 
-<p>Voila les bases d&rsquo;un shell. Il y a enormement de chose qu&rsquo;on peut ajouter:</p>
+<p>Maintenant qu&rsquo;on a un environment, on peut l&rsquo;envoyer à execve à la place de NULL :D.</p>
+
+<p>Voilà les bases d&rsquo;un shell. Il y a énormément de chose qu&rsquo;on peut ajouter:</p>
 
 <ul>
 <li>plein d&rsquo;autre builtin</li>
@@ -669,7 +672,7 @@ typedef struct		s_env
 }					t_env;
 
 // First elem dans la liste chainee
-t_env	*first = NULL;
+static t_env	*first = NULL;
 
 static char	*get_env_var(char *var)
 {
@@ -719,7 +722,7 @@ static void	free_array(char **array)
 	array = NULL;
 }
 
-static void	exec_cmd(char **cmd)
+static void	exec_cmd(char **cmd, char **env)
 {
 	pid_t	pid = 0;
 	int		status = 0;
@@ -736,7 +739,7 @@ static void	exec_cmd(char **cmd)
 		kill(pid, SIGTERM);
 	} else {
 		// Le processus enfant execute la commande ou exit si execve echoue
-		if (execve(cmd[0], cmd, NULL) == -1)
+		if (execve(cmd[0], cmd, env) == -1)
 			perror(&quot;shell&quot;);
 		exit(EXIT_FAILURE);
 	}
@@ -750,7 +753,7 @@ static bool	get_absolute_path(char **cmd, char **env)
 	size_t	idx = 0;
 
 	// si cmd n'est pas le chemin absolue, on cherche le chemin absolue du
-	// binaire grace a la variable d'environement PATH
+	// binaire grace a la variable d'environment PATH
 	if (cmd[0][0] != '/' &amp;&amp; strncmp(cmd[0], &quot;./&quot;, 2) != 0) {
 
 		// On cherche la variable d'environemnt PATH si on ne la toruve pas,
@@ -957,7 +960,7 @@ static void	dup_env(char **envp)
 	for (int i = 0; envp[i]; i++) {
 		add_tail(strdup(envp[i]));
 
-		// On verifie que l'on a les variables d'environement minimal
+		// On verifie que l'on a les variables d'environment minimal
 		if (!strncmp(envp[i], &quot;PATH&quot;, 4)) var_lst[0] = NULL;
 		else if (!strncmp(envp[i], &quot;HOME&quot;, 4)) var_lst[1] = NULL;
 		else if (!strncmp(envp[i], &quot;OLDPWD&quot;, 6)) var_lst[2] = NULL;
@@ -967,7 +970,7 @@ static void	dup_env(char **envp)
 
 	// On verifie qu l'on a les varaibles PATH, HOME, OLD_PWD et SHLVL
 	// sinon on l'ajoute
-	for (int i = 0; i &lt; 5; i++) {
+	for (int i = 0; i &lt; nb_elem; i++) {
 		if (var_lst[i] != NULL)
 			add_env_var(var_lst[i]);
 	}
@@ -980,7 +983,7 @@ static char	**lst_to_array()
 	size_t	idx = 0;
 
 	// On compte le nombre d'element dans la liste pour allouer un tableau de pointeurs
-	// ou chaque pointeur pointera sur notre environement
+	// ou chaque pointeur pointera sur notre environment
 	while (tmp) {
 		idx++;
 		tmp= tmp-&gt;next;
@@ -997,7 +1000,7 @@ static char	**lst_to_array()
 	tmp = first;
 	idx = 0;
 
-	// On fait pointer chaque pointeur sur notrte environement
+	// On fait pointer chaque pointeur sur notrte environment
 	while (tmp) {
 		array[idx] = tmp-&gt;var;
 		tmp = tmp-&gt;next;
@@ -1052,7 +1055,7 @@ int	main(int argc, char **argv, char **envp)
 		} else {
 			env = lst_to_array();
 			if (get_absolute_path(cmd, env) == true) {
-				exec_cmd(cmd);
+				exec_cmd(cmd, env);
 			} else {
 				fprintf(stderr, &quot;Command not found\n&quot;);
 			}
@@ -1068,6 +1071,10 @@ int	main(int argc, char **argv, char **envp)
 	free_lst();
 	printf(&quot;Bye \n&quot;);
 	free(buffer);
+
+	(void)argc;
+	(void)argv;
+
 	return (0);
 }
 </code></pre>

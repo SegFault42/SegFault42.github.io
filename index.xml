@@ -17,10 +17,10 @@
       <pubDate>Fri, 12 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://segfault42.github.io/posts/minishell/</guid>
-      <description>Un shell est la couche la plus haut niveau du systeme Unix.
-Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l&amp;rsquo;execute.
-Nous allons diviser le travaille en plusieurs partie :
- Recuperer en boucle l&amp;rsquo;entree de l&amp;rsquo;utilisateur Parser l&amp;rsquo;entree utilisateur Executer la commande Coder les builtin Gestion de l&amp;rsquo;environement  Tout au long de ce tutorial, la compilation ce fera comme suit :</description>
+      <description>Un shell est la couche le plus haut niveau du système Unix.
+Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l’exécute.
+Nous allons diviser le travaillons en plusieurs parties :
+ Récupérer en boucle l’entrée de l’utilisateur Parser l’entrée utilisateur Executer la commande Coder les builtins Gestion de l’environnement  Tout au long de ce tutorial, la compilation se fera comme suit :</description>
     </item>
     
   </channel>
