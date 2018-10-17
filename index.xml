@@ -24,6 +24,17 @@ Nous allons diviser le travaillons en plusieurs parties :
     </item>
     
     <item>
+      <title>Installation du trinket m0 dans la nintendo switch</title>
+      <link>https://segfault42.github.io/posts/trinketm0_guide/</link>
+      <pubDate>Wed, 10 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://segfault42.github.io/posts/trinketm0_guide/</guid>
+      <description>Dans ce tuto, nous allons voir l&amp;rsquo;installation du trinket M0 dans la nintendo switch.
+Nous allons installer la puce a l&amp;rsquo;intérieur de la console, nous pourrons ensuite reprogrammer le trinket via le port USB-C de la console et reset la puce (pour le reprogrammer) sans démonter la console.
+Prérequis :  Pc Nintendo Switch fer à souder Trinket M0 Tournevis Kynar  Software : Installation des dépendances :  Installer le logiciel arduino : sudo pacman -S arduino Lancer le logiciel : sudo arduino Dans File-&amp;gt;Preferences, ajouter cette URL : https://adafruit.</description>
+    </item>
+    
+    <item>
       <title>Module de lecture de nand pour nintendo 3ds</title>
       <link>https://segfault42.github.io/posts/3ds_hard_memory_dump/</link>
       <pubDate>Wed, 10 Oct 2018 00:00:00 +0000</pubDate>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="SegFault42">
+
+<meta name="description" content="">
+
+<title>Installation du trinket m0 dans la nintendo switch</title>
+<meta name="generator" content="Hugo 0.49" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="https://segfault42.github.io/css/theme.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    <h3 class="home-link"><a href="https://segfault42.github.io">Root</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">SegFault42 - Most recent posts</h3>
+        <ul>
+            
+            <li><a href="https://segfault42.github.io/posts/minishell/">Ecriture d&#39;un shell</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/trinketm0_guide/">Installation du trinket m0 dans la nintendo switch</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/3ds_hard_memory_dump/">Module de lecture de nand pour nintendo 3ds</a></li>
+            
+        </ul>
+    </div>
+
+    
+
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>Installation du trinket m0 dans la nintendo switch</h1>
+<h4>Published 10-10-2018 00:00:00</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="https://segfault42.github.io/posts/trinketm0_guide/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p>Dans ce tuto, nous allons voir l&rsquo;installation du trinket M0 dans la nintendo switch.</p>
+
+<p>Nous allons installer la puce a l&rsquo;intérieur de la console, nous pourrons ensuite reprogrammer le trinket via le port USB-C de la console et reset la puce (pour le reprogrammer) sans démonter la console.</p>
+
+<h3 id="prérequis">Prérequis :</h3>
+
+<ul>
+<li>Pc</li>
+<li>Nintendo Switch</li>
+<li>fer à souder</li>
+<li>Trinket M0</li>
+<li>Tournevis</li>
+<li>Kynar</li>
+</ul>
+
+<h1 id="software">Software :</h1>
+
+<h3 id="installation-des-dépendances">Installation des dépendances :</h3>
+
+<ul>
+<li>Installer le logiciel arduino : <code>sudo pacman -S arduino</code></li>
+<li>Lancer le logiciel : <code>sudo arduino</code></li>
+<li>Dans <code>File-&gt;Preferences</code>, ajouter cette URL : <code>https://adafruit.github.io/arduino-board-index/package_adafruit_index.json</code></li>
+<li>Dans <code>Tools-&gt;Board-&gt;Board Manager</code> installer : <code>Arduino SAMD Boards by Arduino</code>, <code>Arduino SAMD Boards by Adafruit</code></li>
+<li>Dans <code>Tools-&gt;Board</code> selectionner <code>Adafruit Trinket M0</code></li>
+<li>Dans <code>Sketch-&gt;Include Library-&gt;Manage Libraries</code> installer : <code>USBHost</code>, <code>Adafruit DotStar</code></li>
+</ul>
+
+<h4 id="compilation-et-upload">Compilation et upload :</h4>
+
+<p>On peut maintenant brancher en usb le Trinket M0</p>
+
+<p>Dans <code>Tools-&gt;Port</code> selectionner le Trinket M0</p>
+
+<p>Télécharger le contenue du repo. (Merci à Quantum-cross pour le code)</p>
+
+<p>Ouvrir le code du projet : <code>File-&gt;Open-&gt;main/main.ino</code></p>
+
+<p>Appuyer deux fois rapidement sur le bouton reset du trinket</p>
+
+<p>Puis compiler et uploader le code dans le Trinket : <code>Sketch-&gt;Verify/Compile</code>, <code>Sketch-&gt;Upload</code></p>
+
+<h4 id="compiler-avec-un-autre-payload">Compiler avec un autre payload :</h4>
+
+<ul>
+<li>Utiliser le logiciel dans le dossier <code>Payload2Header</code> pour convertir un payload en .h</li>
+<li>Déplacer le .h dans le dossier main et editer le fichier main.ino en remplaçant <code>#include &quot;ReiNX.h&quot;</code> par le nom de votre payload.h</li>
+</ul>
+
+<h1 id="hardware">Hardware :</h1>
+
+<h4 id="préparation-du-trinket-m0">Préparation du Trinket M0 :</h4>
+
+<p>Dessouder le port micro usb.
+Vous pouvez dessouder la résistance si vous ne voulez pas que la led reste constamment allumé.</p>
+
+<p><img src="https://segfault42.github.io/images/trinketm0_guide/trinket_remove.jpg" width="100%"></p>
+
+<h4 id="preparation-de-la-switch">Preparation de la Switch :</h4>
+
+<p>Démonter la coque arrière de la console.</p>
+
+<p>Puis enlever la plaque métallique.</p>
+
+<p>Débrancher la batterie.</p>
+
+<p><img src="https://segfault42.github.io/images/trinketm0_guide/batterie_unplug.jpg" width="100%"></p>
+
+<p>Pour pouvoir avoir accès au bouton reset du trinket une fois la console fermée, il faut le placer exactement comme sur la photo du montage plus bas.</p>
+
+<p>Après avoir protéger l&rsquo;arrière du trinket avec du scotch double face ou autre chose, nous allons souder le trinket à la carte mère de la switch.</p>
+
+<ul>
+<li>le 3V du trinket à la résistance juste au dessus du port USB-C</li>
+<li>le GND du trinket au point a gauche du port USB-C</li>
+<li>le data+ du trinket au data+ de la switch</li>
+<li>le data- du trinket au data- de la switch</li>
+<li>le point 4 du trinket au condensateur de la switch</li>
+</ul>
+
+<p><img src="https://segfault42.github.io/images/trinketm0_guide/solder_wire_trinket.jpg" width="100%"></p>
+
+<p>Une fois vos soudures terminées, vous pouvez re brancher le port sd et remettre la carte sd dans la switch pour tester si le CFW se lance.</p>
+
+<p>Une fois que tout est rebrancher (batterie et lecteur SD), allumer votre console en recorvery (boutton+ et boutton power)</p>
+
+<p>La console devrait booter sur le CFW et le trinket passer en sleep mode (toutes les leds éteinte).</p>
+
+<p>Si c&rsquo;est le cas, l&rsquo;installation est terminée.</p>
+
+<p>Vous pouvez sois remonter la console sans remettre la plaque en metal. (non recommander)</p>
+
+<p>Ou bien découper une partie de la plaque metalique à l&rsquo;endroit du trinket pour pouvoir remmetre la plaque en metal.</p>
+
+<p>Vous avez maintenant accès au bouton reset du trinket</p>
+
+<p><img src="https://segfault42.github.io/images/trinketm0_guide/reset_trinket.jpg" width="100%"></p>
+
+<p>Vous pouvez aussi installer le trinket sur la plaque en metal pour ne pas avoir à la découper. Vous devrez cependant percer un trou sur la grille d&rsquo;aération pour que le bouton du trinket ne reste pas enfoncer.</p>
+
+<p><img src="https://segfault42.github.io/images/trinketm0_guide/grille_switch.jpg" width="100%"></p>
+
+<h3 id="mise-à-jour-du-trinket">Mise à jour du trinket :</h3>
+
+<p>Si vous voulez changer de payload ou le mettre à jour, vous devez booter sur le FW d&rsquo;origine et laisser la console allumer sur le menu principale.</p>
+
+<p>Il est important de le faire depuis le FW officiel. J&rsquo;ai brûler un trinket M0 en le branchant depuis un CFW.</p>
+
+<p>Ensuite appuyer rapidement 2 fois sur le bouton reset du trinket et brancher la console au PC.</p>
+
+<p>Vous pouvez faire comme expliquer au dessus dans la partie Compilation et upload</p>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="https://segfault42.github.io/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+
