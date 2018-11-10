@@ -6,10 +6,22 @@
     <description>Recent content on SegFault42</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 07 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://segfault42.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS Photo unlimited storage</title>
+      <link>https://segfault42.github.io/posts/aws_photo_unlimited_storage/</link>
+      <pubDate>Wed, 07 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://segfault42.github.io/posts/aws_photo_unlimited_storage/</guid>
+      <description>Les personnes abonnées au service Amazon Prime, bénéficient de plusieurs services en plus de la réception de colis en 1 jour ouvre.
+Nous allons exploiter une faille dans le service Amazon Photo qui est compris dans l&amp;rsquo;abonnement Amazon Prime.
+Pour bénéficier du stockage photo en illimiter, il faut uploader des images au format jpeg. Tous les autres fichiers seront facture.
+Si on prend une image au format jpeg, qu&amp;rsquo;on append a la fin du fichier un deuxième fichier (peut importe le type ou la taille) et qu&amp;rsquo;on upload le fichier sur Amazon photo, l&amp;rsquo;upload s&amp;rsquo;effectue et lors du download, le fichier téléchargé sera identique au fichier uploadé :D.</description>
+    </item>
     
     <item>
       <title>Ecriture d&#39;un shell</title>
