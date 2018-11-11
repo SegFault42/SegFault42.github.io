@@ -86,6 +86,25 @@
 <p><img src="https://segfault42.github.io/images/aws_photo_unlimited_storage/hexa.png" width="100%">
 <img src="https://segfault42.github.io/images/aws_photo_unlimited_storage/hexa2.png" width="100%"></p>
 
+<p>Notre fichier contient toujours l&rsquo;image</p>
+
+<p><img src="https://segfault42.github.io/images/aws_photo_unlimited_storage/image_in_file.png" width="100%"></p>
+
+<p>le fichier original et le fichier telechargé sont toujours identiques</p>
+
+<pre><code>❯ shasum *
+ae8c0f1f07c5cf1f40e346dcb1532c411a7a7dd5  44795252265_d97d2d65b8_o.jpg
+ae8c0f1f07c5cf1f40e346dcb1532c411a7a7dd5  44795252265_d97d2d65b8_o_amazon.jpg
+</code></pre>
+
+<p>Et le fichier ce trouve bien dans le stockage dedié à amazon photo</p>
+
+<p><img src="https://segfault42.github.io/images/aws_photo_unlimited_storage/amazon_photo.png" width="100%"></p>
+
+<p>Il y à une limite d&rsquo;upload. Un fichier ne peut pas depasser 50 Go.</p>
+
+<p>Testé avec une image de 1x1 pixel, ca fonctionne aussi :D.</p>
+
 <p><details><summary>Clique -&gt; Le code pour cacher un fichier dans une image :</summary>
 <p></p>
 
