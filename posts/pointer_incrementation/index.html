@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="SegFault42">
+
+<meta name="description" content="">
+
+<title>[C] Incrementation de pointeur</title>
+<meta name="generator" content="Hugo 0.51" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="https://segfault42.github.io/css/theme.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    <h3 class="home-link"><a href="https://segfault42.github.io">Root</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">SegFault42 - Most recent posts</h3>
+        <ul>
+            
+            <li><a href="https://segfault42.github.io/posts/pointer_incrementation/">[C] Incrementation de pointeur</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/aws_photo_unlimited_storage/">AWS Photo unlimited storage</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/minishell/">Ecriture d&#39;un shell</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/trinketm0_guide/">Installation du trinket m0 dans la nintendo switch</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/3ds_hard_memory_dump/">Module de lecture de nand pour nintendo 3ds</a></li>
+            
+        </ul>
+    </div>
+
+    
+
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>[C] Incrementation de pointeur</h1>
+<h4>Published 11-28-2018</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="https://segfault42.github.io/posts/pointer_incrementation/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p>Prenons en exemple ce main:</p>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span>	<span style="color:#a6e22e">main</span>()
+{
+	<span style="color:#75715e">// Allocation de 100 octets
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>alloc <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">char</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>);
+	<span style="color:#66d9ef">if</span> (alloc <span style="color:#f92672">==</span> NULL) {
+		dprintf(<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#34;Memory allocation failure !</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+		<span style="color:#66d9ef">return</span> (EXIT_FAILURE);
+	}
+
+	alloc[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;a&#39;</span>;
+
+	printf(<span style="color:#e6db74">&#34;Adress alloc (before incrementation) = %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc);
+
+	alloc<span style="color:#f92672">++</span>;
+	alloc[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;b&#39;</span>;
+
+	printf(<span style="color:#e6db74">&#34;Adress alloc (after incrementation)  = %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc);
+
+	printf(<span style="color:#e6db74">&#34;Value of alloc[0]   = %c</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc[<span style="color:#ae81ff">0</span>]);
+	printf(<span style="color:#e6db74">&#34;Value of alloc[-1] = %c</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]);
+}</code></pre></td></tr></table>
+</div>
+</div>
+
+<h4 id="output">Output :</h4>
+
+<pre><code>/tmp » ./a.out
+Adress alloc (before incrementation) = 0x55f8c66ed260
+Adress alloc (after incrementation)  = 0x55f8c66ed261
+Value of alloc[0]   = b
+Value og alloc[-1] = a
+
+</code></pre>
+
+<p>J&rsquo;ai alloué 100 octets avec malloc.</p>
+
+<p>À l&rsquo;offset 0 j&rsquo;ai assigner la valeur &lsquo;a&rsquo; puis j&rsquo;ai incrémenté mon pointeur de 1, et j&rsquo;ai assigné la valeur &lsquo;b&rsquo;.</p>
+
+<p>Pour incrémenter notre pointeur, nous avons juste a l&rsquo;incrémenter comme si nous incrémentons un index.</p>
+
+<p>À la ligne 13, alloc pointe sur l&rsquo;adresse : 0x55f8c66ed260</p>
+
+<p>J&rsquo;assigne la valeur &lsquo;a&rsquo; a cette adresse. (ligne 13)</p>
+
+<p>J&rsquo;incrémente ensuite alloc de 1(ligne 17).</p>
+
+<p>Alloc pointe maintenant 1 octets plus loin : 0x55f8c66ed261</p>
+
+<p>J’assigne la valeur ‘b’ a l’offset 0 (qui est en réalité l’offset 1 devenue l’offset 0 du a notre incrémentation)</p>
+
+<p>On voit clairement que le pointeur a été incrémente de sizeof(char) * 1 octets.</p>
+
+<p>Rien de spécial, j’ai incrémenté mon pointeur de 1 octets, normal que je suis 1 octet plus loin.</p>
+
+<h3 id="voyons-maintenant-le-pourquoi-de-cet-article">Voyons maintenant le pourquoi de cet article.</h3>
+
+<h4 id="que-ce-passe-t-il-si-je-fais-la-même-chose-avec-un-type-multi-octets-uint64-t-uint32-t-struct">Que ce passe t&rsquo;il si je fais la même chose avec un type multi octets (uint64_t, uint32_t, struct, …)?</h4>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">50
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span>	s_struct
+{
+	size_t		var_a;
+	size_t		var_b;
+	<span style="color:#66d9ef">int</span>			var_c;
+	<span style="color:#66d9ef">int</span>			var_d;
+	<span style="color:#66d9ef">char</span>		var_e;
+}				t_struct;
+
+<span style="color:#66d9ef">void</span>	<span style="color:#a6e22e">print_value</span>(t_struct <span style="color:#f92672">*</span>alloc)
+{
+	printf(<span style="color:#e6db74">&#34;address alloc = %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc);
+	printf(<span style="color:#e6db74">&#34;alloc-&gt;var_a = %zu</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc<span style="color:#f92672">-&gt;</span>var_a);
+	printf(<span style="color:#e6db74">&#34;alloc-&gt;var_b = %zu</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, alloc<span style="color:#f92672">-&gt;</span>var_b);
+
+	puts(<span style="color:#e6db74">&#34;&#34;</span>);
+}
+
+<span style="color:#66d9ef">int</span>	<span style="color:#a6e22e">main</span>()
+{
+	<span style="color:#75715e">// Allocation de 100 structures
+</span><span style="color:#75715e"></span>	t_struct	<span style="color:#f92672">*</span>alloc <span style="color:#f92672">=</span> (t_struct <span style="color:#f92672">*</span>)calloc(<span style="color:#66d9ef">sizeof</span>(t_struct), <span style="color:#ae81ff">100</span>);
+	<span style="color:#66d9ef">if</span> (alloc <span style="color:#f92672">==</span> NULL) {
+		dprintf(<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#34;Memory allocation failure !</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+		<span style="color:#66d9ef">return</span> (EXIT_FAILURE);
+	}
+
+	<span style="color:#75715e">// Print sizeof struct
+</span><span style="color:#75715e"></span>	printf(<span style="color:#e6db74">&#34;sizeof t_struct = %zu</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#66d9ef">sizeof</span>(t_struct));
+
+	alloc<span style="color:#f92672">-&gt;</span>var_a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+	alloc<span style="color:#f92672">-&gt;</span>var_b <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+
+	<span style="color:#75715e">// Affiche l&#39;adresse de alloc et le contenue de variable
+</span><span style="color:#75715e"></span>	print_value(alloc);
+
+	alloc<span style="color:#f92672">++</span>;
+
+	alloc<span style="color:#f92672">-&gt;</span>var_a <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+	alloc<span style="color:#f92672">-&gt;</span>var_b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
+
+	print_value(alloc);
+
+	alloc<span style="color:#f92672">--</span>;
+
+	print_value(alloc);
+}</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>Dans ce code, on a une structure qui fait combien d’octet a votre avis ?</p>
+
+<p>Je vais faire un article sur le padding pour ceux qui ont répondu 25.</p>
+
+<p>La bonne réponse est 32.</p>
+
+<p>Donc on a une structure de 32 octets, une allocation de la taille de notre struct * 100.</p>
+
+<p>Une assignation de deux éléments de notre structure, une incrémentation et une autre assignation.</p>
+
+<p>Output de ce main :</p>
+
+<pre><code>/tmp » ./a.out                                             segfault42@segfault42-pc
+sizeof t_struct = 32
+
+address alloc = 0x55f4a3e46260
+alloc-&gt;var_a = 1
+alloc-&gt;var_b = 2
+
+address alloc = 0x55f4a3e46280
+alloc-&gt;var_a = 3
+alloc-&gt;var_b = 4
+
+address alloc = 0x55f4a3e46260
+alloc-&gt;var_a = 1
+alloc-&gt;var_b = 2
+</code></pre>
+
+<h4 id="à-votre-avis-après-le-alloc-mon-pointeur-sera-incrémenté-de-combien-d-octet">À votre avis, après le alloc++ mon pointeur sera incrémenté de combien d&rsquo;octet ?</h4>
+
+<p>On voit ici qu’en incrémentent de 1 (alloc++), notre pointeur ne s’incrémente pas de 1 octet, mais de sizeof(son type).</p>
+
+<p>Je passe de l’adresse 0x55f4a3e46260 a 0x55f4a3e46280.</p>
+
+<p>J’ai bien les bonnes valeurs dans mes deux variables quand j’affiche leur contenue avec la fonction print_value.</p>
+
+<p>Si je décrémente, je me retrouve bien a -sizeof(mon type) et le contenue de mes 2 variables et toujours le même.</p>
+
+<p>Donc pour résumer, contrairement à ce qu’on pourrait penser, quand on incrémente un pointeur, en faisant notre_variable++ ou notre_variable += 1 ou même notre_variable = notre_variable + 1, on n&rsquo;incrémente pas de 1 octet, mais de sizeof(le type de notre variable).</p>
+
+<p>Une incrémentation de pointeur revient à faire notre_variable += sizeof(notre_variable) + 1.</p>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="https://segfault42.github.io/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+

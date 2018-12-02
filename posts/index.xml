@@ -6,10 +6,20 @@
     <description>Recent content in Posts on SegFault42</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 07 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 28 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://segfault42.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[C] Incrementation de pointeur</title>
+      <link>https://segfault42.github.io/posts/pointer_incrementation/</link>
+      <pubDate>Wed, 28 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://segfault42.github.io/posts/pointer_incrementation/</guid>
+      <description>Prenons en exemple ce main:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24  #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt; int	main() { // Allocation de 100 octets 	char *alloc = (char *)malloc(sizeof(char) * 100); if (alloc == NULL) { dprintf(2, &amp;#34;Memory allocation failure !\n&amp;#34;); return (EXIT_FAILURE); } alloc[0] = &amp;#39;a&amp;#39;; printf(&amp;#34;Adress alloc (before incrementation) = %p\n&amp;#34;, alloc); alloc++; alloc[0] = &amp;#39;b&amp;#39;; printf(&amp;#34;Adress alloc (after incrementation) = %p\n&amp;#34;, alloc); printf(&amp;#34;Value of alloc[0] = %c\n&amp;#34;, alloc[0]); printf(&amp;#34;Value of alloc[-1] = %c\n&amp;#34;, alloc[-1]); }   Output : /tmp » .</description>
+    </item>
     
     <item>
       <title>AWS Photo unlimited storage</title>

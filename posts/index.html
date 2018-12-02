@@ -9,7 +9,7 @@
 <meta name="description" content="">
 
 <title>Posts</title>
-<meta name="generator" content="Hugo 0.50" />
+<meta name="generator" content="Hugo 0.51" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
@@ -26,6 +26,8 @@
     <div id="last-posts" class="open">
         <h3 data-open="last-posts">SegFault42 - Most recent posts</h3>
         <ul>
+            
+            <li><a href="https://segfault42.github.io/posts/pointer_incrementation/">[C] Incrementation de pointeur</a></li>
             
             <li><a href="https://segfault42.github.io/posts/aws_photo_unlimited_storage/">AWS Photo unlimited storage</a></li>
             
@@ -50,19 +52,21 @@
 <div class="articles-list">
     
     <article>
-        <h3><a href="https://segfault42.github.io/posts/trinketm0_guide/">Installation du trinket m0 dans la nintendo switch</a> - 2018-10-10 00:00:00</h3>
-        Dans ce tuto, nous allons voir l&rsquo;installation du trinket M0 dans la nintendo switch.
-Nous allons installer la puce a l&rsquo;intérieur de la console, nous pourrons ensuite reprogrammer le trinket via le port USB-C de la console et reset la puce (pour le reprogrammer) sans démonter la console.
-Prérequis :  Pc Nintendo Switch fer à souder Trinket M0 Tournevis Kynar  Software : Installation des dépendances :  Installer le logiciel arduino : sudo pacman -S arduino Lancer le logiciel : sudo arduino Dans File-&gt;Preferences, ajouter cette URL : https://adafruit.
+        <h3><a href="https://segfault42.github.io/posts/pointer_incrementation/">[C] Incrementation de pointeur</a> - 2018-11-28</h3>
+        Prenons en exemple ce main:
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24  #include &lt;stdio.h&gt;#include &lt;stdlib.h&gt; int	main() { // Allocation de 100 octets 	char *alloc = (char *)malloc(sizeof(char) * 100); if (alloc == NULL) { dprintf(2, &#34;Memory allocation failure !\n&#34;); return (EXIT_FAILURE); } alloc[0] = &#39;a&#39;; printf(&#34;Adress alloc (before incrementation) = %p\n&#34;, alloc); alloc++; alloc[0] = &#39;b&#39;; printf(&#34;Adress alloc (after incrementation) = %p\n&#34;, alloc); printf(&#34;Value of alloc[0] = %c\n&#34;, alloc[0]); printf(&#34;Value of alloc[-1] = %c\n&#34;, alloc[-1]); }   Output : /tmp » .
     </article>
     
     <article>
-        <h3><a href="https://segfault42.github.io/posts/3ds_hard_memory_dump/">Module de lecture de nand pour nintendo 3ds</a> - 2018-10-10 00:00:00</h3>
-         Module de lecture de nand pour nintendo 3ds Point a souder au dos de la carte mere : Le DAT1, DAT2 et DAT3 sont uniquement a souder pour une meilleur vitesse de transfert. CLK altrnatif : CMD en rouge et DAT0 en noir : Connecteur souder a la carte mere de la console : Module de lecture de nand : Face arriere de la console : Module brancher a la console : Module brancher a la console : Module connecter au pc : Error code : 
+        <h3><a href="https://segfault42.github.io/posts/aws_photo_unlimited_storage/">AWS Photo unlimited storage</a> - 2018-11-07</h3>
+        Les personnes abonnées au service Amazon Prime, bénéficient de plusieurs services en plus de la réception de colis en 1 jour ouvre.
+Nous allons exploiter une faille dans le service Amazon Photo qui est compris dans l&rsquo;abonnement Amazon Prime.
+Pour bénéficier du stockage photo en illimité, il faut uploader des images au format jpeg. Tous les autres fichiers seront facturé.
+Si on prend une image au format jpeg, qu&rsquo;on append à la fin du fichier un deuxième fichier (peut importe le type ou la taille) et qu&rsquo;on upload le fichier sur Amazon photo, l&rsquo;upload s&rsquo;éffectue et lors du download, le fichier téléchargé sera identique au fichier uploadé :D.
     </article>
     
     <article>
-        <h3><a href="https://segfault42.github.io/posts/minishell/">Ecriture d&#39;un shell</a> - 2018-10-12 00:00:00</h3>
+        <h3><a href="https://segfault42.github.io/posts/minishell/">Ecriture d&#39;un shell</a> - 2018-10-12</h3>
         Un shell est la couche le plus haut niveau du système Unix.
 Pour faire simple, un shell est un programme qui prend en input une commande, la parse et l’exécute.
 Nous allons diviser le travaillons en plusieurs parties :
@@ -70,11 +74,15 @@ Nous allons diviser le travaillons en plusieurs parties :
     </article>
     
     <article>
-        <h3><a href="https://segfault42.github.io/posts/aws_photo_unlimited_storage/">AWS Photo unlimited storage</a> - 2018-11-07 00:00:00</h3>
-        Les personnes abonnées au service Amazon Prime, bénéficient de plusieurs services en plus de la réception de colis en 1 jour ouvre.
-Nous allons exploiter une faille dans le service Amazon Photo qui est compris dans l&rsquo;abonnement Amazon Prime.
-Pour bénéficier du stockage photo en illimité, il faut uploader des images au format jpeg. Tous les autres fichiers seront facturé.
-Si on prend une image au format jpeg, qu&rsquo;on append à la fin du fichier un deuxième fichier (peut importe le type ou la taille) et qu&rsquo;on upload le fichier sur Amazon photo, l&rsquo;upload s&rsquo;éffectue et lors du download, le fichier téléchargé sera identique au fichier uploadé :D.
+        <h3><a href="https://segfault42.github.io/posts/trinketm0_guide/">Installation du trinket m0 dans la nintendo switch</a> - 2018-10-10</h3>
+        Dans ce tuto, nous allons voir l&rsquo;installation du trinket M0 dans la nintendo switch.
+Nous allons installer la puce a l&rsquo;intérieur de la console, nous pourrons ensuite reprogrammer le trinket via le port USB-C de la console et reset la puce (pour le reprogrammer) sans démonter la console.
+Prérequis :  Pc Nintendo Switch fer à souder Trinket M0 Tournevis Kynar  Software : Installation des dépendances :  Installer le logiciel arduino : sudo pacman -S arduino Lancer le logiciel : sudo arduino Dans File-&gt;Preferences, ajouter cette URL : https://adafruit.
+    </article>
+    
+    <article>
+        <h3><a href="https://segfault42.github.io/posts/3ds_hard_memory_dump/">Module de lecture de nand pour nintendo 3ds</a> - 2018-10-10</h3>
+         Module de lecture de nand pour nintendo 3ds Point a souder au dos de la carte mere : Le DAT1, DAT2 et DAT3 sont uniquement a souder pour une meilleur vitesse de transfert. CLK altrnatif : CMD en rouge et DAT0 en noir : Connecteur souder a la carte mere de la console : Module de lecture de nand : Face arriere de la console : Module brancher a la console : Module brancher a la console : Module connecter au pc : Error code : 
     </article>
     
 </div>
