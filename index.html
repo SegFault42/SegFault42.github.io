@@ -27,6 +27,8 @@
         <h3 data-open="last-posts">SegFault42 - Most recent posts</h3>
         <ul>
             
+            <li><a href="https://segfault42.github.io/posts/structure_padding/">[C] Structure padding</a></li>
+            
             <li><a href="https://segfault42.github.io/posts/pointer_incrementation/">[C] Incrementation de pointeur</a></li>
             
             <li><a href="https://segfault42.github.io/posts/aws_photo_unlimited_storage/">AWS Photo unlimited storage</a></li>
@@ -50,6 +52,14 @@
 
 
 <div class="articles-list">
+    
+    <article>
+        <h3><a href="https://segfault42.github.io/posts/structure_padding/">[C] Structure padding</a> - 2018-12-03</h3>
+        Nous allons voir dans cet article que la taille d&rsquo;une structure est peux être plus grande que ce que vous pensez et comment optimiser l&rsquo;espace en RAM.
+Un ordinateur lie et écrit en mémoire a une adresse divisible par 4 (x86) ou divisible par 8 (x86_64).
+Quelle est la taille de cette structure ?
+typedef struct structure { char a; int b; char c; char *d; short e; } structure;  Rapelle : Sur un system 64 bits :  char : 1 octet short : 2 octets int : 4 octets pointeur : 8 octets  ~/Documents/blog(master*) » clang main.
+    </article>
     
     <article>
         <h3><a href="https://segfault42.github.io/posts/pointer_incrementation/">[C] Incrementation de pointeur</a> - 2018-11-28</h3>

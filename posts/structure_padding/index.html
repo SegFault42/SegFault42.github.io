@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="SegFault42">
+
+<meta name="description" content="">
+
+<title>[C] Structure padding</title>
+<meta name="generator" content="Hugo 0.51" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="https://segfault42.github.io/css/theme.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    <h3 class="home-link"><a href="https://segfault42.github.io">Root</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">SegFault42 - Most recent posts</h3>
+        <ul>
+            
+            <li><a href="https://segfault42.github.io/posts/structure_padding/">[C] Structure padding</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/pointer_incrementation/">[C] Incrementation de pointeur</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/aws_photo_unlimited_storage/">AWS Photo unlimited storage</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/minishell/">Ecriture d&#39;un shell</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/trinketm0_guide/">Installation du trinket m0 dans la nintendo switch</a></li>
+            
+            <li><a href="https://segfault42.github.io/posts/3ds_hard_memory_dump/">Module de lecture de nand pour nintendo 3ds</a></li>
+            
+        </ul>
+    </div>
+
+    
+
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>[C] Structure padding</h1>
+<h4>Published 12-03-2018</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="https://segfault42.github.io/posts/structure_padding/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p>Nous allons voir dans cet article que la taille d&rsquo;une structure est peux être plus grande que ce que vous pensez et comment optimiser l&rsquo;espace en RAM.</p>
+
+<p>Un ordinateur lie et écrit en mémoire a une adresse divisible par 4 (x86) ou divisible par 8 (x86_64).</p>
+
+<p>Quelle est la taille de cette structure ?</p>
+
+<pre><code>typedef struct structure
+{
+char a;
+int b;
+char c;
+char *d;
+short e;
+} structure;
+</code></pre>
+
+<h4 id="rapelle">Rapelle :</h4>
+
+<h3 id="sur-un-system-64-bits">Sur un system 64 bits :</h3>
+
+<ul>
+<li>char : 1 octet</li>
+<li>short : 2 octets</li>
+<li>int : 4 octets</li>
+<li>pointeur : 8 octets</li>
+</ul>
+
+<pre><code>~/Documents/blog(master*) » clang main.c
+~/Documents/blog(master*) » ./a.out
+sizeof struct : 32
+</code></pre>
+
+<p>Lorsque vous allez compiler le code du dessus, votre compilateur va ajouter des octets de padding a votre structure</p>
+
+<pre><code>~/Documents/blog(master*) » clang -Wpadded main.c
+main.c:6:7: warning: padding struct 'struct pad' with 3 bytes to align 'b'
+[-Wpadded]
+int b;
+^
+main.c:8:8: warning: padding struct 'struct pad' with 7 bytes to align 'd'
+[-Wpadded]
+char *d;
+^
+main.c:3:16: warning: padding size of 'struct pad' with 6 bytes to alignment
+boundary [-Wpadded]
+typedef struct pad
+^
+3 warnings generated.
+
+</code></pre>
+
+<pre><code>Structure aligne par le compilateur:
+------------------------------------
+|X...|XXXX|X.......|XXXXXXXX|XX......|
+------------------------------------
+</code></pre>
+
+<p>Avec le flag -Wpadded, on voit que clang ajoute les octets de padding au bon endroit.</p>
+
+<h3 id="pourquoi-aligner-une-structure-alors-que-le-compilateur-le-fait">Pourquoi aligner une structure alors que le compilateur le fait ?</h3>
+
+<p>Le compilateur ne fait qu&rsquo;ajouter des octets de padding et ne modifie pas l&rsquo;ordre des variables dans la structure.</p>
+
+<p>La même structure qu&rsquo;au dessus aligner manuellement.</p>
+
+<pre><code>typedef struct structure
+{
+char *d;
+int b;
+short e;
+char a;
+char c;
+} structure;
+
+Stucture manuellement aligner :
+--------------------
+|XXXXXXXX|XXXX|XX|X|X|
+--------------------
+</code></pre>
+
+<pre><code>~/Documents/blog(master*) » clang -Wpadded main.c
+~/Documents/blog(master*) » ./a.out
+sizeof struct : 16
+</code></pre>
+
+<p>Sur cet exemple, on gagne 16 octets. On a divisé par deux la taille de notre structure ce qui n&rsquo;est pas négligeable.</p>
+
+<p>Sur un code simple comme celui la, ce n&rsquo;est pas très important, mais imaginez sur un code comme celui du kernel linux.</p>
+
+<p>Ou môme sur des périphériques embarque comme un arduino, teensy, micro controlleur etc &hellip;</p>
+
+<p>Quand on cree une structure, une bonne pratique est de déclarer les variables de la plus grande a la plus petite.</p>
+
+<p>On peut aussi ajouter l&rsquo;attribut packed pour que le compilateur pad la structure en question.</p>
+
+<pre><code>typedef struct structure
+{
+char a;
+int b;
+char c;
+char *d;
+short e;
+} __attribute__((packed)) structure;
+
+</code></pre>
+
+<p>Ou sinon pour padder toutes les structures on peut ajouter au début du code :</p>
+
+<pre><code>#pragma pack(1)
+</code></pre>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="https://segfault42.github.io/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+
