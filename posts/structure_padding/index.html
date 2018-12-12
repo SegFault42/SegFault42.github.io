@@ -79,17 +79,17 @@
 
 <p>Nous allons voir dans cet article que la taille d&rsquo;une structure est peux être plus grande que ce que vous pensez et comment optimiser l&rsquo;espace en RAM.</p>
 
-<p>Un ordinateur lie et écrit en mémoire a une adresse divisible par 4 (x86) ou divisible par 8 (x86_64).</p>
+<p>Un ordinateur lie et écrit en mémoire à une adresse divisible par 4 (x86) ou divisible par 8 (x86_64).</p>
 
 <p>Quelle est la taille de cette structure ?</p>
 
 <pre><code>typedef struct structure
 {
-char a;
-int b;
-char c;
-char *d;
-short e;
+	char a;
+	int b;
+	char c;
+	char *d;
+	short e;
 } structure;
 </code></pre>
 
@@ -109,7 +109,7 @@ short e;
 sizeof struct : 32
 </code></pre>
 
-<p>Lorsque vous allez compiler le code du dessus, votre compilateur va ajouter des octets de padding a votre structure</p>
+<p>Lorsque vous allez compiler le code du dessus, votre compilateur va ajouter des octets de padding à votre structure</p>
 
 <pre><code>~/Documents/blog(master*) » clang -Wpadded main.c
 main.c:6:7: warning: padding struct 'struct pad' with 3 bytes to align 'b'
@@ -144,11 +144,11 @@ typedef struct pad
 
 <pre><code>typedef struct structure
 {
-char *d;
-int b;
-short e;
-char a;
-char c;
+	char *d;
+	int b;
+	short e;
+	char a;
+	char c;
 } structure;
 
 Stucture manuellement aligner :
@@ -166,7 +166,7 @@ sizeof struct : 16
 
 <p>Sur un code simple comme celui la, ce n&rsquo;est pas très important, mais imaginez sur un code comme celui du kernel linux.</p>
 
-<p>Ou môme sur des périphériques embarque comme un arduino, teensy, micro controlleur etc &hellip;</p>
+<p>Ou meme sur des périphériques embarque comme un arduino, teensy, micro controlleur etc &hellip;</p>
 
 <p>Quand on cree une structure, une bonne pratique est de déclarer les variables de la plus grande a la plus petite.</p>
 
@@ -174,11 +174,11 @@ sizeof struct : 16
 
 <pre><code>typedef struct structure
 {
-char a;
-int b;
-char c;
-char *d;
-short e;
+	char a;
+	int b;
+	char c;
+	char *d;
+	short e;
 } __attribute__((packed)) structure;
 
 </code></pre>
