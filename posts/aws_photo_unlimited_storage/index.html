@@ -152,7 +152,7 @@ off_t	go_to_end_of_file(int fd_source)
 	offset = lseek(fd_source, 0, SEEK_END);
 	if (offset == -1) {
 		perror(&quot;lseek&quot;);
-		return (-1);
+		return (-1);/
 	}
 	return (offset);
 }
@@ -235,7 +235,7 @@ int	main(int argc, char **argv)
 static inline bool	usage(int argc, char *bin)
 {
 	if (argc != 3) {
-		printf(&quot;Usage : %s file_to split new_file&quot;, bin);
+		printf(&quot;Usage : %s file_to_split new_file&quot;, bin);
 		return (false);
 	}
 	return (true);
