@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+<plist version="1.0">
+
+<dict>
+
+    <key>Label</key>
+
+    <string>ru.21-school.restart.kerberos.plist</string>
+
+    <key>ProgramArguments</key>
+
+    <array>
+
+        <string>pkill</string>
+
+        <string>coreauthd</string>
+        <string>kcm</string>
+		<string>kdc</string>
+
+    </array>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/restart.kerberos_error.log</string>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/restart.kerberos_out.log</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StartInterval</key>
+
+    <integer>7000</integer>
+
+</dict>
+
+</plist>
