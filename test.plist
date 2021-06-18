@@ -15,10 +15,7 @@
     <array>
 
         <string>pkill</string>
-
-        <string>coreauthd</string>
         <string>kcm</string>
-		<string>kdc</string>
 
     </array>
 
