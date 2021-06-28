@@ -7,7 +7,7 @@ import sys
 import os
 
 logfile="/var/log/deepthought-worker.log"
-stringToFind="deep"
+stringToFind="SIGKILL"
 
 file = open(logfile, "r")
 
